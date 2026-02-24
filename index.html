@@ -3,118 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parcial Primer Cómputo</title>
-    <style>
-        /* Reseteo básico para quitar márgenes por defecto */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        /* Hacemos que el body ocupe toda la pantalla para empujar el footer abajo */
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        /* --- ESTILOS DEL ENCABEZADO (HEADER) --- */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 50px;
-            background-color: #ffffff;
-            /* Una liniecita gris clara abajo como se ve en la imagen */
-            border-bottom: 1px solid #eaeaea; 
-        }
-
-        .logo {
-            height: 90px; /* Ajustá esto si tu logo.png es muy grande o chiquito */
-        }
-
-        .header-text {
-            color: #0c1b98; /* Un azul oscurito parecido al del logo */
-            text-align: right;
-            font-weight: bold;
-            font-size: 15px;
-            line-height: 1.3;
-        }
-
-        /* --- ESTILOS DEL CUERPO (MAIN) --- */
-        main {
-            flex-grow: 1; /* Esto hace que el centro agarre todo el espacio sobrante */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #fcfcfc; /* Un gris super clarito para el fondo */
-        }
-
-        h1 {
-            font-size: 4.5rem; /* Letra bien grandota */
-            color: #333333;
-            font-weight: 900; /* Letra bien negrita (bold) */
-            text-transform: uppercase;
-        }
-
-        /* --- ESTILOS DEL PIE DE PÁGINA (FOOTER) --- */
-        footer {
-            background-color: #1c2bc0; /* Azul chivo del footer */
-            color: #ffffff;
-            text-align: center;
-            padding: 25px 20px 30px 20px;
-        }
-
-        footer h3 {
-            font-size: 15px;
-            text-decoration: underline;
-            margin-bottom: 15px;
-        }
-
-        .integrantes {
-            display: flex;
-            justify-content: center;
-            gap: 40px; /* Separación entre los dos nombres */
-            font-size: 14px;
-        }
-        .link-principal {
-    text-decoration: none;
-    color: #333333;
-}
-
-.link-principal:hover {
-    color: #1c2bc0; /* Azul cuando pasen el mouse */
-    transition: 0.3s;
-}
-    </style>
+        <title>Parcial Primer Cómputo</title>
+        <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header>
-        <img src="LOGO.png" alt="Logo UGB" class="logo">
-        <div class="header-text">
-            Parcial Primer Cómputo Ingeniería en Sistemas y<br>
-            Redes Informáticas
-        </div>
-    </header>
+        <header>
+            <div class="brand">
+                <img src="LOGO.png" alt="Logo UGB" class="logo-image">
+                <div>
+                    <h1>Parcial Primer Cómputo</h1>
+                    <p>Ingeniería en Sistemas y Redes Informáticas</p>
+                </div>
+            </div>
+        </header>
 
-    <main>
-    <h1>
-        <a href="parcial.html" class="link-principal">
-            TU PAGINA WEB AQUI
-        </a>
-    </h1>
-</main>
+        <main class="layout">
 
-    <footer>
-        <h3>Integrantes del Equipo</h3>
-        <div class="integrantes">
-            <span>Fredys Alejandro Hernández Robles SMSS060924</span>
-            <span>David Alfonso Alvarenga Bonilla SMSS016424</span>
-        </div>
-    </footer>
+            <section class="panel">
+                <h2>Registrar Paciente</h2>
+                <p class="sub">Evita duplicados (mismo nombre + trámite) y datos vacíos.</p>
+
+                <form id="formTurno" class="form">
+                    <div class="field">
+                        <label for="nombre">Nombre del paciente</label>
+                        <input id="nombre" type="text" placeholder="Ej: María López" autocomplete="off" required>
+                        <small class="help">Mínimo 3 caracteres.</small>
+                    </div>
+
+                    <div class="field">
+                        <label for="tramite">Motivo / Trámite</label>
+                        <select id="tramite" required>
+                            <option value="">Seleccione una opción</option>
+                            <option value="Consulta">Consulta</option>
+                            <option value="Control">Control</option>
+                            <option value="Resultados">Resultados</option>
+                            <option value="Emergencia">Emergencia</option>
+                        </select>
+                        <small class="help">Campo obligatorio.</small>
+                    </div>
+
+                    <div class="field">
+                        <label for="prioridad">Prioridad</label>
+                        <select id="prioridad" required>
+                            <option value="">Seleccione prioridad</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Alta">Alta</option>
+                        </select>
+                        <small class="help">Solo para demostrar uso de select + validación.</small>
+                    </div>
+
+                    <button class="btn primary" type="submit">
+                        Generar turno
+                    </button>
+                </form>
+
+                <div class="notice" id="mensajeForm" aria-live="polite"></div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h2>Cola de Atención</h2>
+                        <p class="sub">Muestra el paciente en cola y el siguiente a atender.</p>
+                    </div>
+
+                    <div class="panel-actions">
+                        <button id="btnAtender" class="btn">Atender siguiente</button>
+                        <button id="btnLimpiar" class="btn danger">Limpiar</button>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <span class="stat-label">En cola</span>
+                        <span class="stat-value" id="statCola">0</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Siguiente</span>
+                        <span class="stat-value" id="statSiguiente">—</span>
+                    </div>
+                </div>
+
+                <div class="queue" id="listaTurnos"></div>
+            </section>
+
+        </main>
+
+        <footer class="footer">
+            <h3>Integrantes del Equipo</h3>
+            <div class="integrantes">
+                <span>Fredys Alejandro Hernández Robles SMSS060924</span>
+                <span>David Alfonso Alvarenga Bonilla SMSS016424</span>
+            </div>
+        </footer>
+
+        <script src="script.js"></script>
 
 </body>
 </html>

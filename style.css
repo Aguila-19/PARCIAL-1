@@ -263,3 +263,48 @@ select:focus {
   border-top: 1px solid var(--line);
   margin-top: 20px;
 }
+
+/* Ajustes para el header/logo usados en index.html */
+header .brand {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+header .brand img {
+  height: 56px;
+  object-fit: contain;
+}
+
+header h1 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0;
+}
+
+header p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Footer integrantes (mantener visibilidad y alineación) */
+.footer {
+  background: #1c2bc0;
+  color: #ffffff;
+}
+
+.footer h3 {
+  font-size: 15px;
+  text-decoration: underline;
+  margin-bottom: 8px;
+}
+
+.footer .integrantes {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  font-size: 14px;
+  color: #ffffff;
+}
