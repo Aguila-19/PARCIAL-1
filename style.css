@@ -1,112 +1,36 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
 body {
+    font-family: Arial;
     background-color: #f4f6fb;
-}
-
-/* HEADER */
-.header {
-    background: linear-gradient(90deg, #1c2bc0, #3f51f7);
-    color: white;
-    padding: 20px;
     text-align: center;
+    padding: 40px;
 }
 
-/* NAV */
-.nav {
-    background-color: #ffffff;
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.nav a {
-    text-decoration: none;
-    color: #1c2bc0;
-    font-weight: bold;
-    transition: 0.3s;
-}
-
-.nav a:hover {
-    color: #000;
-}
-
-/* CONTENEDOR PRINCIPAL */
-.container {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    padding: 50px;
-    flex-wrap: wrap;
-}
-
-/* TARJETAS */
-.card {
-    background-color: white;
+form {
+    background: white;
     padding: 30px;
     width: 300px;
+    margin: auto;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
-.card h2 {
-    margin-bottom: 20px;
-    color: #1c2bc0;
-}
-
-/* INPUTS */
-input {
+input, select, button {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
 }
 
 button {
-    width: 100%;
-    padding: 10px;
     background-color: #1c2bc0;
     color: white;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    transition: 0.3s;
 }
 
 button:hover {
-    background-color: #000;
+    background-color: black;
 }
 
-/* TABLA */
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th, td {
-    padding: 8px;
-    text-align: center;
-    border: 1px solid #ddd;
-}
-
-th {
-    background-color: #1c2bc0;
-    color: white;
-}
-
-/* FOOTER */
-.footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #1c2bc0;
-    color: white;
-    margin-top: 40px;
+#resultado {
+    margin-top: 30px;
 }
