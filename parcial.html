@@ -3,60 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sistema de Turnos</title>
+  <title>Gestión de Cola - Consultorio</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <header class="header">
-    <h1>Sistema de Turnos</h1>
-    <p>Registro rápido de turnos para evitar desorden y duplicados.</p>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-dot"></div>
+      <div>
+        <h1>Gestión de Cola - Consultorio</h1>
+        <p>Ordena pacientes por turno, valida datos y muestra la cola sin recargar.</p>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="pill">HTML</span>
+      <span class="pill">CSS</span>
+      <span class="pill">JS</span>
+      <span class="pill">WebComponents</span>
+    </div>
   </header>
 
-  <main class="container">
+  <main class="layout">
 
-    <section class="card">
-      <h2>Generar Turno</h2>
+    <section class="panel">
+      <h2>Registrar Paciente</h2>
+      <p class="sub">Evita duplicados (mismo nombre + trámite) y datos vacíos.</p>
 
-      <form id="formTurno">
-        <label>
-          Nombre del usuario
-          <input id="nombre" type="text" placeholder="Ej: Juan Pérez" required />
-        </label>
+      <form id="formTurno" class="form">
+        <div class="field">
+          <label for="nombre">Nombre del paciente</label>
+          <input id="nombre" type="text" placeholder="Ej: María López" autocomplete="off" required>
+          <small class="help">Mínimo 3 caracteres.</small>
+        </div>
 
-        <label>
-          Tipo de trámite
+        <div class="field">
+          <label for="tramite">Motivo / Trámite</label>
           <select id="tramite" required>
-            <option value="">Seleccione un trámite</option>
+            <option value="">Seleccione una opción</option>
             <option value="Consulta">Consulta</option>
-            <option value="Pagos">Pagos</option>
-            <option value="Información">Información</option>
+            <option value="Control">Control</option>
+            <option value="Resultados">Resultados</option>
+            <option value="Emergencia">Emergencia</option>
           </select>
-        </label>
+          <small class="help">Campo obligatorio.</small>
+        </div>
 
-        <button type="submit">Generar turno</button>
+        <div class="field">
+          <label for="prioridad">Prioridad</label>
+          <select id="prioridad" required>
+            <option value="">Seleccione prioridad</option>
+            <option value="Normal">Normal</option>
+            <option value="Alta">Alta</option>
+          </select>
+          <small class="help">Solo para demostrar uso de select + validación.</small>
+        </div>
+
+        <button class="btn primary" type="submit">
+          Generar turno
+        </button>
       </form>
 
-      <p class="hint">No se permite nombre vacío, ni turno duplicado (mismo nombre + trámite).</p>
+      <div class="notice" id="mensajeForm" aria-live="polite"></div>
     </section>
 
-    <section class="card">
-      <h2>Cola de Turnos</h2>
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Cola de Atención</h2>
+          <p class="sub">Muestra el paciente en cola y el siguiente a atender.</p>
+        </div>
 
-      <div class="actions">
-        <button id="btnAtender" type="button">Atender siguiente</button>
-        <button id="btnLimpiar" type="button" class="danger">Limpiar cola</button>
+        <div class="panel-actions">
+          <button id="btnAtender" class="btn">Atender siguiente</button>
+          <button id="btnLimpiar" class="btn danger">Limpiar</button>
+        </div>
       </div>
 
-      <div id="estado" class="estado"></div>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-label">En cola</span>
+          <span class="stat-value" id="statCola">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Siguiente</span>
+          <span class="stat-value" id="statSiguiente">—</span>
+        </div>
+      </div>
 
-      <div id="listaTurnos" class="lista"></div>
+      <div class="queue" id="listaTurnos"></div>
     </section>
 
   </main>
 
   <footer class="footer">
-    <small>© Parcial FrontEnd - HTML, CSS, JS</small>
+    <small>© Parcial FrontEnd — Gestión de Cola</small>
   </footer>
 
   <script src="script.js"></script>

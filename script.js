@@ -1,116 +1,161 @@
-// WebComponent: tarjeta de turno reutilizable
-class TurnoCard extends HTMLElement {
-  set data(turno) {
+class TurnoItem extends HTMLElement {
+  set data(t) {
     this.innerHTML = `
-      <div style="padding:12px;border-radius:10px;background:#fff;
-                  box-shadow:0 2px 10px rgba(0,0,0,0.06);
-                  border:1px solid #ececf3;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <strong style="color:#1c2bc0;">Turno #${turno.numero}</strong>
-          <span style="font-size:12px;color:#555;">${turno.tramite}</span>
+      <div style="
+        border:1px solid rgba(255,255,255,0.10);
+        background: rgba(255,255,255,0.06);
+        border-radius: 16px;
+        padding: 14px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      ">
+        <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
+          <div>
+            <div style="font-weight:900;font-size:14px;">
+              Paciente: ${t.nombre}
+            </div>
+            <div style="margin-top:6px;font-size:13px;opacity:0.85;">
+              Trámite: <strong>${t.tramite}</strong> · Prioridad: <strong>${t.prioridad}</strong>
+            </div>
+          </div>
+
+          <div style="text-align:right;">
+            <div style="font-size:12px;opacity:0.7;">Ticket</div>
+            <div style="font-size:16px;font-weight:900;color:#4f7cff;">#${t.ticket}</div>
+          </div>
         </div>
-        <p style="margin-top:8px;"><strong>Nombre:</strong> ${turno.nombre}</p>
-        <p style="font-size:12px;color:#666;margin-top:6px;">
-          Estado: ${turno.estado}
-        </p>
+
+        <div style="margin-top:10px;display:flex;justify-content:space-between;gap:10px;align-items:center;">
+          <div style="font-size:12px;opacity:0.7;">
+            Estado: <strong>${t.estado}</strong>
+          </div>
+
+          <div style="
+            padding: 6px 10px;
+            border-radius: 999px;
+            border:1px solid rgba(255,255,255,0.12);
+            background: rgba(0,0,0,0.25);
+            font-size: 12px;
+            font-weight: 900;
+          ">
+            N° Cola: ${t.posicion}
+          </div>
+        </div>
       </div>
     `;
   }
 }
-customElements.define("turno-card", TurnoCard);
+customElements.define("turno-item", TurnoItem);
 
-// Estado de la app (cola de turnos)
+// Estado
 let cola = [];
-let correlativo = 1;
+let ticketCounter = 1;
 
-// Referencias DOM
+// DOM
 const form = document.getElementById("formTurno");
-const inputNombre = document.getElementById("nombre");
-const selectTramite = document.getElementById("tramite");
+const nombre = document.getElementById("nombre");
+const tramite = document.getElementById("tramite");
+const prioridad = document.getElementById("prioridad");
+
 const listaTurnos = document.getElementById("listaTurnos");
-const estado = document.getElementById("estado");
+const statCola = document.getElementById("statCola");
+const statSiguiente = document.getElementById("statSiguiente");
+
 const btnAtender = document.getElementById("btnAtender");
 const btnLimpiar = document.getElementById("btnLimpiar");
+const mensajeForm = document.getElementById("mensajeForm");
 
-// Renderiza la cola sin recargar (DOM)
+function setMsg(texto, tipo = "") {
+  mensajeForm.className = "notice " + tipo;
+  mensajeForm.textContent = texto;
+}
+
+function existeDuplicado(n, tr) {
+  const key = (n + "|" + tr).toLowerCase();
+  return cola.some(x => (x.nombre + "|" + x.tramite).toLowerCase() === key);
+}
+
 function render() {
   listaTurnos.innerHTML = "";
 
+  // recalcular posiciones (número de cola real)
+  cola = cola.map((t, idx) => ({ ...t, posicion: idx + 1 }));
+
+  statCola.textContent = String(cola.length);
+
   if (cola.length === 0) {
-    estado.textContent = "No hay turnos en cola.";
+    statSiguiente.textContent = "—";
     return;
   }
 
-  const primero = cola[0];
-  estado.textContent = `Siguiente a atender: Turno #${primero.numero} - ${primero.nombre} (${primero.tramite})`;
+  const next = cola[0];
+  statSiguiente.textContent = `${next.nombre} (Cola ${next.posicion})`;
 
   cola.forEach(t => {
-    const card = document.createElement("turno-card");
-    card.data = t;
-    listaTurnos.appendChild(card);
+    const item = document.createElement("turno-item");
+    item.data = t;
+    listaTurnos.appendChild(item);
   });
 }
 
-// Validación: evita datos vacíos y duplicados
-function existeDuplicado(nombre, tramite) {
-  const key = (nombre + "|" + tramite).toLowerCase();
-  return cola.some(t => (t.nombre + "|" + t.tramite).toLowerCase() === key);
-}
-
-// Evento submit (sin recargar)
 form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const nombre = inputNombre.value.trim();
-  const tramite = selectTramite.value;
+  const n = nombre.value.trim();
+  const tr = tramite.value;
+  const pr = prioridad.value;
 
-  // Validación fuerte (más allá de required)
-  if (nombre.length < 3) {
-    alert("El nombre debe tener al menos 3 caracteres.");
+  // Validación fuerte
+  if (n.length < 3) {
+    setMsg("Nombre inválido: mínimo 3 caracteres.", "bad");
     return;
   }
-  if (!tramite) {
-    alert("Seleccione un trámite.");
+  if (!tr) {
+    setMsg("Seleccione un trámite.", "bad");
     return;
   }
-  if (existeDuplicado(nombre, tramite)) {
-    alert("Ese turno ya existe (mismo nombre y trámite). Evitamos duplicados.");
+  if (!pr) {
+    setMsg("Seleccione prioridad.", "bad");
+    return;
+  }
+  if (existeDuplicado(n, tr)) {
+    setMsg("Registro duplicado: mismo nombre y trámite en cola.", "bad");
     return;
   }
 
-  const nuevoTurno = {
-    numero: correlativo++,
-    nombre,
-    tramite,
-    estado: "En espera"
+  const nuevo = {
+    ticket: ticketCounter++,
+    nombre: n,
+    tramite: tr,
+    prioridad: pr,
+    estado: "En espera",
+    posicion: cola.length + 1
   };
 
-  cola.push(nuevoTurno);
+  cola.push(nuevo);
   form.reset();
+  setMsg(`Turno generado para ${nuevo.nombre}. Ticket #${nuevo.ticket}.`, "ok");
   render();
 });
 
-// Evento atender siguiente
 btnAtender.addEventListener("click", () => {
   if (cola.length === 0) {
-    alert("No hay turnos para atender.");
+    alert("No hay pacientes en cola.");
     return;
   }
-
-  const atendido = cola.shift(); // sale el primero (FIFO)
-  alert(`Atendiendo: Turno #${atendido.numero} - ${atendido.nombre} (${atendido.tramite})`);
+  const atendido = cola.shift();
+  alert(`Atendiendo a: ${atendido.nombre} (Ticket #${atendido.ticket})`);
   render();
 });
 
-// Evento limpiar cola
 btnLimpiar.addEventListener("click", () => {
   if (cola.length === 0) return;
-  const ok = confirm("¿Seguro que desea limpiar la cola?");
+  const ok = confirm("¿Desea limpiar toda la cola?");
   if (!ok) return;
 
   cola = [];
   render();
+  setMsg("Cola limpiada correctamente.", "ok");
 });
 
-// Inicial
+// inicial
 render();
