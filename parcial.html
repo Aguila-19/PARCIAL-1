@@ -1,32 +1,64 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Registro de Citas Médicas</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistema de Turnos</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <h1>Registro de Citas Médicas</h1>
+  <header class="header">
+    <h1>Sistema de Turnos</h1>
+    <p>Registro rápido de turnos para evitar desorden y duplicados.</p>
+  </header>
 
-    <form id="formCita">
-        <input type="text" id="nombre" placeholder="Nombre del paciente" required>
-        
-        <select id="especialidad" required>
-            <option value="">Seleccione especialidad</option>
-            <option value="General">Medicina General</option>
-            <option value="Pediatria">Pediatría</option>
-            <option value="Cardiologia">Cardiología</option>
-        </select>
+  <main class="container">
 
-        <input type="date" id="fecha" required>
-        
-        <button type="submit">Registrar Cita</button>
-    </form>
+    <section class="card">
+      <h2>Generar Turno</h2>
 
-    <div id="resultado"></div>
+      <form id="formTurno">
+        <label>
+          Nombre del usuario
+          <input id="nombre" type="text" placeholder="Ej: Juan Pérez" required />
+        </label>
 
-    <script src="script.js"></script>
+        <label>
+          Tipo de trámite
+          <select id="tramite" required>
+            <option value="">Seleccione un trámite</option>
+            <option value="Consulta">Consulta</option>
+            <option value="Pagos">Pagos</option>
+            <option value="Información">Información</option>
+          </select>
+        </label>
 
+        <button type="submit">Generar turno</button>
+      </form>
+
+      <p class="hint">No se permite nombre vacío, ni turno duplicado (mismo nombre + trámite).</p>
+    </section>
+
+    <section class="card">
+      <h2>Cola de Turnos</h2>
+
+      <div class="actions">
+        <button id="btnAtender" type="button">Atender siguiente</button>
+        <button id="btnLimpiar" type="button" class="danger">Limpiar cola</button>
+      </div>
+
+      <div id="estado" class="estado"></div>
+
+      <div id="listaTurnos" class="lista"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <small>© Parcial FrontEnd - HTML, CSS, JS</small>
+  </footer>
+
+  <script src="script.js"></script>
 </body>
 </html>
